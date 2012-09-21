@@ -60,7 +60,7 @@ class Lib_RouterOS
         $this->_password   = '';
 
         $this->_authenticated = false;
-        $this->_debug         = true;
+        $this->_debug         = false;
         $this->_connected     = false;
 
         // attempt to set any options provided
