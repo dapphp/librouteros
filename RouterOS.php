@@ -90,11 +90,11 @@ class Lib_RouterOS
      *
      * @param string $router          The ip address or hostname (and optional :port) of the router to log into
      * @param string $username        The user to login as (default 'admin')
-     * @param string $password        The user's password  (default '')
+     * @param string $password        The user's password  (default null)
      * @param bool $connectOnDemand   default: false - connect and authenticate immediately; true - connect and auth on first command
      * @throws Exception              If login fails or on !trap/!failure
      */
-    public function connect($router, $username = 'admin', $password = '', $connectOnDemand = false)
+    public function connect($router, $username = 'admin', $password = null, $connectOnDemand = false)
     {
         if ($this->_connected) {
             throw new Exception('Already connected, cannot call connect()');
@@ -120,7 +120,7 @@ class Lib_RouterOS
                 $this->_debug("Connected to router");
                 $this->_connected = true;
 
-                if ($username != '') {
+                if ($username != '' && $password != null) {
                     try {
                           $this->login($username, $password);
                     } catch(Exception $ex) {
@@ -312,6 +312,13 @@ class Lib_RouterOS
                 }
             } else if ($reply == '!fatal') {
                 $message = (sizeof($attrs) > 0) ? array_shift(array_keys($attrs)) : 'Unknown error';
+                if (sizeof($attrs) > 0) {
+                    $keys    = array_shift($attrs);
+                    $message = array_shift($keys);
+                } else {
+                    $message = 'Unknown Error';
+                }
+
                 fclose($this->_conn);
                 $this->_conn      = null;
                 $this->_connected = false;
@@ -425,56 +432,56 @@ class Lib_RouterOS
         return $this->_connected;
     }
 
-	public function getAuthenticated()
+    public function getAuthenticated()
     {
         return $this->_authenticated;
     }
 
-	public function getRouter()
+    public function getRouter()
     {
         return $this->_router;
     }
 
-	public function setRouter($router)
+    public function setRouter($router)
     {
         $this->_router = $router;
         return $this;
     }
 
-	public function getRouterPort()
+    public function getRouterPort()
     {
         return $this->_routerPort;
     }
 
-	public function setRouterPort($routerPort)
+    public function setRouterPort($routerPort)
     {
         $this->_routerPort = $routerPort;
         return $this;
     }
 
-	public function getUsername()
+    public function getUsername()
     {
         return $this->_username;
     }
 
-	public function setUsername($username)
+    public function setUsername($username)
     {
         $this->_username = $username;
         return $this;
     }
 
-	public function getPassword()
+    public function getPassword()
     {
         return $this->_password;
     }
 
-	public function setPassword($password)
+    public function setPassword($password)
     {
         $this->_password = $password;
         return $this;
     }
 
-	/**
+    /**
      * Enable debug output
      * @param bool $debug true to enable debug output, false to disable (default)
      */
