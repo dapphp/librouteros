@@ -310,10 +310,9 @@ class Lib_RouterOS
                 } else {
                     $trap = "Trap: {$attrs['message']}";
                 }
-            } else if ($reply == '!fatal') {
-                $message = (sizeof($attrs) > 0) ? array_shift(array_keys($attrs)) : 'Unknown error';
+            } else if ($reply == '!fatal') { 
                 if (sizeof($attrs) > 0) {
-                    $keys    = array_shift($attrs);
+                    $keys    = array_keys($attrs);
                     $message = array_shift($keys);
                 } else {
                     $message = 'Unknown Error';
